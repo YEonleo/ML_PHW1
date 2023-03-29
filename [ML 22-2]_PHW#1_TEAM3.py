@@ -1,17 +1,12 @@
-# ML-PHW1
-## Compare the performance (i.e., accuracy) of the following classification models against the same dataset.
-+ Various data scaling methods and encoding methods
-+ Various values of the model parameters for each model
-+ Various values for the hyperparameters
-+ Various numbers 𝑘 for 𝑘-fold cross validation
 
-## [Code with User Manual](https://github.com/gochangin-ai/ML-PHW1/blob/main/README.md#code-with-user-manual) <
-## [Results](https://github.com/gochangin-ai/ML-PHW1/blob/main/README.md#results) <
 
-# Code With User Manual
-## Importing necessary libraries
-#### Make sure that you have all these libaries available to run the code successfully
-```python
+
+# This is a sample Python script.
+
+# Press Shift+F10 to execute it or replace it with your code.
+# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+
+
 import numpy as np
 import pandas as pd
 import warnings
@@ -43,13 +38,10 @@ from sklearn.tree import export_graphviz
 from IPython.display import Image
 from PIL import Image
 import time
-```
 
-## Model Training Function
-#### Parameter : models   |   list that you want to use DecisionTreeClassifier(),LogisticRegression(),SVC()
-####            x_train, x_text, y_train , y_test | Data that you want to train
-####            k  |  paramter for k-fold CV
-```python
+# In[2]:
+
+
 def Model_train(models,x_train, x_test, y_train, y_test,k):
     cnt = 0
     train_best_scores = [[0] * 4 for _ in range(4)]
@@ -79,12 +71,11 @@ def Model_train(models,x_train, x_test, y_train, y_test,k):
         cnt += 1;
 
     return train_best_scores, test_best_scores
-```    
-## Data Preprocessing
-#### Read data and Deal with missing values and change target class value(2,4) to (0,1)
-#### Parameter : data_path   |  path of 'breast-cancer-wisconsin.data' file 
 
-```python
+
+# In[3]:
+
+
 def DataProcessing(data_path):
     dataset_df = pd.read_csv(data_path, header=None)
 
@@ -105,16 +96,14 @@ def DataProcessing(data_path):
     target.loc[:,'Class'] = encoder.fit_transform(target.loc[:, 'Class'])
 
     return data, target
-```
-## Model_scaled 
-### Train Model with scalers 
 
-#### Parameter :scalers  |   Scalers that you want to use
-####            models   |   list that you want to use DecisionTreeClassifier(),LogisticRegression(),SVC()
-####            x_train, x_text, y_train , y_test | Data that you want to train
-####            k  |  paramter for k-fold CV
-```python
+
+# In[4]:
+
+
 def Model_scaled(scalers,models,x_train, x_test, y_train, y_test,k):
+
+
     train_best_scores = [[0] * 4 for _ in range(4)]
     test_best_scores = [[0] * 4 for _ in range(4)]
     for i in scalers:
@@ -148,16 +137,11 @@ def Model_scaled(scalers,models,x_train, x_test, y_train, y_test,k):
             cnt += 1;
 
     return train_best_scores, test_best_scores
-```
 
-## plt_view
-### Display each train,test socre of models at each k-fold  
-#### Parameter :train_bestScore | result train score of model trained
-#### test_bestScore | result train score of model trained 
-#### scaled_train_bestScore |   result train score of model trained with scaled data
-#### scaled_test_bestScore |  result tes score of model trained with scaled data
-#### k | used k-fold parameter k
-```python
+
+# In[5]:
+
+
 def plt_view(train_bestScore,test_bestScore,scaled_train_bestScore,scaled_test_bestScore,k):
     plt.figure(figsize=(10, 4))
     x = ['Decision(Entorpy)', 'Decision(Gini)', 'Logistic', 'SVM']
@@ -187,18 +171,8 @@ def plt_view(train_bestScore,test_bestScore,scaled_train_bestScore,scaled_test_b
     plt.ylabel('Acc')
     plt.title('Test Acc '+str(k)+'-fold')
     plt.show()
-```
 
 
-
-## plt_view_bar
-### Display each train,test socre of models at each scalers 
-#### Parameter :train_bestScore | result train score of model trained
-#### test_bestScore | result train score of model trained 
-#### scaled_train_bestScore |   result train score of model trained with scaled data
-#### scaled_test_bestScore |  result tes score of model trained with scaled data
-#### k | used k-fold parameter k
-```python
 def plt_view_bar(train_bestScore,test_bestScore,scaled_train_bestScore,scaled_test_bestScore,k):
     models = ['Decision(Entorpy)', 'Decision(Gini)', 'Logistic', 'SVM']
     for i in range(4):
@@ -218,17 +192,8 @@ def plt_view_bar(train_bestScore,test_bestScore,scaled_train_bestScore,scaled_te
         plt.ylabel('Acc')
         plt.title(str(k)+'-fold')
         plt.show()
-```
 
 
-## scaled_view
-### Display changed value of scaled data
-#### Parameter :scaler | scaler
-#### raw_train_x | raw train_x data
-#### raw_test_x | raw test_x data
-#### transformed_train_x | transformed train_x data
-#### transformed_test_x | transformed train_y data
-```python
 def scaled_view(scaler,raw_train_x,raw_test_x,transformed_train_x,transformed_test_x):
 
     f, axes = plt.subplots(3, 6)
@@ -252,17 +217,11 @@ def scaled_view(scaler,raw_train_x,raw_test_x,transformed_train_x,transformed_te
                 col += 1
 
     plt.show()
-```
-## kfold
-### train models for each k fold 
-#### Parameter :scalers | scalers you want to use
-#### models | models you want to use
-#### x_training_set | train x data that you use
-#### x_test_set | test x data that you use
-#### y_training_set | train  y data that you use
-#### y_test_set | test y data that you use
-#### k | k-fold k parameter you want to use
-```python
+
+
+# In[6]:
+
+
 def kfold(scalers,models,x_training_set, x_test_set, y_training_set, y_test_set,k):
 
     for i in k:
@@ -272,12 +231,11 @@ def kfold(scalers,models,x_training_set, x_test_set, y_training_set, y_test_set,
 
         plt_view(train_bestScore,test_bestScore,scaled_train_bestScore,scaled_test_bestScore,i)
         plt_view_bar(train_bestScore,test_bestScore,scaled_train_bestScore,scaled_test_bestScore,i)
-```
 
 
-## main code 
-### set scalers, models, k, data_path and run for train models
-```python
+# In[7]:
+
+
 warnings.filterwarnings(action='ignore')
 
 scalers = [StandardScaler(),MinMaxScaler(), RobustScaler()]
@@ -313,29 +271,4 @@ data , target = DataProcessing(data_path)
 
 x_training_set, x_test_set, y_training_set, y_test_set = train_test_split(data, target, test_size=0.10, random_state=42, shuffle=True)
 kfold(scalers,models,x_training_set, x_test_set, y_training_set, y_test_set,k)
-```
 
-
-# Results
-
-![텍스트](result/image1.png)
-![텍스트](result/image2.png)
-![텍스트](result/image3.png)
-![텍스트](result/image4.png)
-![텍스트](result/image5.png)
-![텍스트](result/image6.png)
-![텍스트](result/image7.png)
-![텍스트](result/image8.png)
-![텍스트](result/image9.png)
-![텍스트](result/image10.png)
-![텍스트](result/image11.png)
-![텍스트](result/image12.png)
-![텍스트](result/image13.png)
-![텍스트](result/image14.png)
-![텍스트](result/image15.png)
-![텍스트](result/image16.png)
-![텍스트](result/image17.png)
-![텍스트](result/image18.png)
-![텍스트](result/image19.png)
-![텍스트](result/image20.png)
-## More results on result folder ! 
